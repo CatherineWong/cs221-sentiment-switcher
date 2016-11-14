@@ -108,18 +108,19 @@ class DefaultEvaluator():
     
     def _convert_vader_sent_score(self, vader_score):
         """
-        Converts the vader score to its valence (negative scores are negative, positive are positive).
+        Converts the vader score, a normalized score between -1 and 1 (where -1 is negative) 
+        to a uniform mapping onto [1, 10]
+        to its valence (negative scores are negative, positive are positive).
         """
-        return -1.0 if vader_score < 0 else 1.0
+        return np.interp(vader_score, [-1,1], [1,10])
     
     def _get_sentiment_changed_score(self, old_score, new_review):
         """
-        Return 1 if sentiment changed, -1 if not. Uses the NLTK Vader sentiment analyzer.
+        Return a value between 0 and 1 denoting the degree of change in sentiment.
         """
-        sentiment_score = self._convert_vader_sent_score(
+        new_sent_score = self._convert_vader_sent_score(
             self.sentiment_analyzer.polarity_scores(new_review)['compound'])
-        old_sent_score = self._convert_imdb_sent_score(old_score)
-        return 1.0 if (sentiment_score != old_sent_score) else -1.0
+        return (abs(new_sent_score - old_score) / max(old_score - 1, 10 - old_score))
     
     def _get_sentence_score(self, old_review, new_review):
         """
