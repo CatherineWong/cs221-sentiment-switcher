@@ -1,0 +1,6 @@
+sentiment
+translation
+sentiment reversal
+artificial intelligence
+statistical machine translation
+sentiment analysis

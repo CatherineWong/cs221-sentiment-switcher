@@ -250,3 +250,5 @@ class ExperimentRunner():
         if self.verbose:
             print "Finished evaluating " + str(index) + " test reviews."
         print "Mean score: " + str(np.mean(self.scores))
+        print "Median score: " + str(np.median(self.scores))
+        print "Median score: " + str(np.std(self.scores))
